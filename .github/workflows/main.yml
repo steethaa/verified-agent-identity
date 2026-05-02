@@ -1,37 +1,39 @@
+name: Verify Human Identity
+
 on:
-workflow_dispatch:
-inputs:
-agent_name:
-description: 'ashtteegent'
-required: true
-default: 'ashtteegent'
-agent_description:
-description: 'ashtteegent'
-required: true
-default: 'ashtteegent AI Agent'
+  workflow_dispatch:
+    inputs:
+      agent_name:
+        description: 'ashteegent'
+        required: true
+        default: 'ashtteegent'
+      agent_description:
+        description: 'ashtteegent'
+        required: true
+        default: 'ashtteegent AI Agent'
 
 jobs:
-verify:
-runs-on: ubuntu-latest
+  verify:
+    runs-on: ubuntu-latest
 
-steps:
-- name: Checkout repo
-uses: actions/checkout@v3
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-- name: Setup Node.js
-uses: actions/setup-node@v3
-with:
-node-version: '20'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-- name: Install dependencies
-run: |
-cd scripts
-npm install
+      - name: Install dependencies
+        run: |
+          cd scripts
+          npm install
 
-- name: Step 1 - Create new Ethereum Identity
-run: node scripts/createNewEthereumIdentity.js
+      - name: Step 1 - Create new Ethereum Identity
+        run: node scripts/createNewEthereumIdentity.js
 
-- name: Step 2 - Link Human to Agent
-run: |
-node scripts/manualLinkHumanToAgent.js \
---challenge "{\"name\": \"ashtteegent", \"description\": \"ashtteegent AI agent"
+      - name: Step 2 - Link Human to Agent
+        run: |
+          node scripts/manualLinkHumanToAgent.js \
+          --challenge "{\"name\": \"${{ github.event.inputs.agent_name }}\", \"description\": \"${{ github.event.inputs.agent_description }}\"}"
